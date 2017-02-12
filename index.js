@@ -3,7 +3,7 @@ var _ = require('lodash');
 var mime = require('mime');
 var lwip = require('lwip');
 
-function WebpackPWAManifest(options) {
+function PwaManifestWebpackPlugin(options) {
   this.options = _.assign({
     filename: 'manifest.json',
     orientation: 'portrait',
@@ -20,7 +20,7 @@ function WebpackPWAManifest(options) {
   }
 }
 
-WebpackPWAManifest.prototype.apply = function(compiler) {
+PwaManifestWebpackPlugin.prototype.apply = function(compiler) {
   var self = this;
   compiler.plugin('emit', function(compilation, callback) {
     self.genIcons(compiler, compilation, function() {
@@ -30,7 +30,7 @@ WebpackPWAManifest.prototype.apply = function(compiler) {
   });
 }
 
-WebpackPWAManifest.prototype.createManifest= function(compilation) {
+PwaManifestWebpackPlugin.prototype.createManifest= function(compilation) {
   var filename = this.options.filename;
   delete this.options.filename;
   var contents = this.options;
@@ -45,7 +45,7 @@ WebpackPWAManifest.prototype.createManifest= function(compilation) {
   }
 }
 
-WebpackPWAManifest.prototype.genIcons = function(compiler, compilation, callback) {
+PwaManifestWebpackPlugin.prototype.genIcons = function(compiler, compilation, callback) {
   var self = this;
   var sizes = this.options.icon.sizes;
   var src = this.options.icon.src;
@@ -92,4 +92,4 @@ WebpackPWAManifest.prototype.genIcons = function(compiler, compilation, callback
   }
 }
 
-module.exports = WebpackPWAManifest
+module.exports = PwaManifestWebpackPlugin;

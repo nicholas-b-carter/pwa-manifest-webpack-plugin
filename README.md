@@ -1,18 +1,18 @@
-# webpack-pwa-manifest
+# pwa-manifest-webpack-plugin
 
 generating `manifest.json` for pwa app
 
 # use
 
 ```javascript
-npm i webpack-pwa-manifest --save-dev
+npm i pwa-manifest-webpack-plugin --save-dev
 ```
 
 ```
-const WebpackPWAManifest = require('webpack-pwa-manifest');
+const PwaManifestWebpackPlugin = require('pwa-manifest-webpack-plugin');
 
 plugins: [
-  new WebpackPWAManifest({
+  new PwaManifestWebpackPlugin({
     name: 'Todos',
     description: 'a todo demo of pwa',
     icon: {
