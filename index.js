@@ -1,10 +1,9 @@
 var path = require('path');
-var _ = require('lodash');
 var mime = require('mime');
 var lwip = require('lwip');
 
 function PwaManifestWebpackPlugin(options) {
-  this.options = _.assign({
+  this.options = Object.assign({
     filename: 'manifest.json',
     orientation: 'portrait',
     display: 'standalone',
@@ -23,17 +22,23 @@ function PwaManifestWebpackPlugin(options) {
 PwaManifestWebpackPlugin.prototype.apply = function(compiler) {
   var self = this;
   compiler.plugin('emit', function(compilation, callback) {
-    self.genIcons(compiler, compilation, function() {
-      self.createManifest(compilation);
-      callback();
-    });
+    if (self.options.icon) {
+      self.genIcons(compiler, compilation, function() {
+        self.createManifest(compilation);
+        callback();
+      });
+    } else {
+        self.createManifest(compilation);
+        callback();
+    }
   });
 }
 
 PwaManifestWebpackPlugin.prototype.createManifest= function(compilation) {
   var filename = this.options.filename;
-  delete this.options.filename;
-  var contents = this.options;
+  var contents = Object.assign({}, this.options);
+  delete contents.filename;
+  delete contents.icon;
 
   compilation.assets[filename] = {
     source: function() {
@@ -83,7 +88,6 @@ PwaManifestWebpackPlugin.prototype.genIcons = function(compiler, compilation, ca
   }
 
   if (src && Array.isArray(sizes)) {
-    delete this.options.icon;
     lwip.open(src, function(err, image) {
       resize(image, sizes);
     });
