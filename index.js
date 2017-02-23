@@ -52,7 +52,7 @@ PwaManifestWebpackPlugin.prototype.createManifest= function(compilation) {
 
 PwaManifestWebpackPlugin.prototype.genIcons = function(compiler, compilation, callback) {
   var self = this;
-  var sizes = this.options.icon.sizes;
+  var sizes = this.options.icon.sizes.slice();
   var src = this.options.icon.src;
   var outputPath = compiler.options.output.path;
 
@@ -87,7 +87,9 @@ PwaManifestWebpackPlugin.prototype.genIcons = function(compiler, compilation, ca
     });
   }
 
-  if (src && Array.isArray(sizes)) {
+  if (src && Array.isArray(sizes) && !!sizes.length) {
+    this.options.icons = [];
+
     lwip.open(src, function(err, image) {
       resize(image, sizes);
     });
