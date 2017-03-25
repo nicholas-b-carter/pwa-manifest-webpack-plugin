@@ -1,6 +1,6 @@
 var path = require('path');
 var mime = require('mime');
-var lwip = require('lwip');
+var lwip = require('pajk-lwip');
 
 function PwaManifestWebpackPlugin(options) {
   this.options = Object.assign({
