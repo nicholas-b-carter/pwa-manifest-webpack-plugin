@@ -1,6 +1,6 @@
 var path = require('path');
 var mime = require('mime');
-var lwip = require('lwip');
+var Jimp = require('jimp');
 
 function PwaManifestWebpackPlugin(options) {
   this.options = Object.assign({
@@ -54,44 +54,38 @@ PwaManifestWebpackPlugin.prototype.genIcons = function(compiler, compilation, ca
   var self = this;
   var sizes = this.options.icon.sizes.slice();
   var src = this.options.icon.src;
+  var type = mime.lookup(src);
+  var ext = mime.extension(type);
   var outputPath = compiler.options.output.path;
-
-  // liwp library only single process, so one by one recursive processing
-  function resize(image, sizes) {
-    var type = mime.lookup(src);
-    var ext = mime.extension(type);
-    var size = sizes.pop();
-    var filename = 'icon_' + size + 'x' + size + '.' + ext;
-    self.options.icons.push({
-      src: filename,
-      sizes: size + 'x' + size,
-      type: type,
-    });
-
-    image.resize(size, size, function(err, image) {
-      image.toBuffer(ext, function(err, buffer) {
-        compilation.assets[filename] = {
-          source: function() {
-            return buffer;
-          },
-          size: function() {
-            return buffer.length;
-          }
-        }
-        if (sizes.length) {
-          resize(image, sizes);
-        } else {
-          callback();
-        }
-      });
-    });
-  }
 
   if (src && Array.isArray(sizes) && !!sizes.length) {
     this.options.icons = [];
 
-    lwip.open(src, function(err, image) {
-      resize(image, sizes);
+    Jimp.read(src).then(function(image) {
+      sizes.forEach(function(size, index) {
+        var filename = 'icon_' + size + 'x' + size + '.' + ext;
+        self.options.icons.push({
+          src: filename,
+          sizes: size + 'x' + size,
+          type: type,
+        });
+
+        image.resize(size, size)
+          .getBuffer(type, function(err, buffer) {
+            compilation.assets[filename] = {
+              source: function() {
+                return buffer;
+              },
+              size: function() {
+                return buffer.length;
+              }
+            }
+
+            if (index === sizes.length - 1) {
+              callback();
+            }
+          });
+      });
     });
   } else {
     callback();

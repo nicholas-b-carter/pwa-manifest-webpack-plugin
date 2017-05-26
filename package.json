@@ -1,6 +1,6 @@
 {
   "name": "pwa-manifest-webpack-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,10 +10,11 @@
     "type": "git",
     "url": "git@github.com:easthing/pwa-manifest-webpack-plugin.git"
   },
-  "author": "dongyu",
+  "author": "easthing",
+  "email": "easthing@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "lwip": "0.0.9",
-    "mime": "^1.3.4"
+    "mime": "^1.3.4",
+    "jimp": "^0.2.28"
   }
 }
